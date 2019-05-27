@@ -12,7 +12,7 @@ def read_gmt_hier(file_name):
     gmt_genes = []
     res =pd.DataFrame()
 
-    with open("exemplo.gmt", 'r') as f:
+    with open(file_name, 'r') as f:
         # separar cada elemento separado por tab e guardar eles
         for line in f:
             gmt_names.append(line.split("\t")[0])
