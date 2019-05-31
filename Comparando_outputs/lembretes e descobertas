@@ -1,0 +1,7 @@
+range do python n inclui o final, preciso alterar meu codigo pra sempre incluir o max_genes (por default ele é 1500).
+No R ele vai até 1500 e no python vai até 1450.
+
+Table cut ta identico o output com exceçao do problema de n incluir o final do range e arredondamentos do tipo .9999999999999999
+
+
+

@@ -39,7 +39,7 @@ def _get_directional_cutoff(direction,deg_list, logFC_col, pvalue_col, min_genes
     top = top.sort_values(by = "pi_value" , ascending = False)
     df = pd.DataFrame(columns = ["minimum_log2fc","minimum_MinuslogP","minimum_Pi", "TopCut"])
     rows = []
-    for i in range(min_genes, max_genes,50):
+    for i in range(min_genes, max_genes+1 ,50):  # max_genes +1 to include the number max_genes in the range
         top_genes = top.iloc[0:i]
         minFC = min(abs(top_genes[logFC_col]))
         maxP = max(top_genes[pvalue_col])
@@ -93,7 +93,7 @@ def _get_pathway(merge_p, term2gene, all_genes, deg_list,gene_col, logFC_col, pv
     
       
     pathGs = []  #melhorar isso
-    for i in range(min_genes , max_genes , 50):
+    for i in range(min_genes, max_genes+1 ,50):  # max_genes +1 to include the number max_genes in the range
         top_genes = top.loc[0:i,gene_col].astype(str)
         pathG = _run_enrich(top_genes, all_genes, gmt_file)
         pathG.columns = [ "term" , str(i)]
