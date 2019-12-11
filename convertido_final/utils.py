@@ -2,36 +2,25 @@ import pandas as pd
 
 def read_gmt_hier(file_name):
     '''
-    file_name string -> dataframe and dictionary
-    
-    Reads .gmt file and returns a Pandas DataFrame and a dictionary with the information of the gmt file in a format ready to be used.
-    
+    file_name string -> dataframe
+    Reads .gmt file and returns a Pandas DataFrame
     '''
-    gmt_names = []
-    gmt_desc  = []
-    gmt_genes = []
-    res =pd.DataFrame()
+    pathway_names = []
+    gene_names = []
 
-    with open(file_name, 'r') as f:
+    with open(file_name, 'r') as file:
         # separar cada elemento separado por tab e guardar eles
-        for line in f:
-            gmt_names.append(line.split("\t")[0])
-            gmt_desc.append(line.split("\t")[1])
-            gmt_genes.append(line.split("\t")[2:])
-
-    for i in range(len(gmt_genes)) :
-
+        for line in file:
+            pathway_names.append(line.split("\t")[0])
+            gene_names.append(line.split("\t")[2:])
+    temp = []
+    for i in range(len(gene_names)):
         # apagar \n presente no ultimo gene de cada lista (artefato da leitura do arquivo)
-        gmt_genes[i][-1] = gmt_genes[i][-1].replace("\n", "")
+        gene_names[i][-1] = gene_names[i][-1].replace("\n", "")
+        temp.append(pd.DataFrame({'term': [pathway_names[i]] * len(gene_names[i]),
+                                  'gene': gene_names[i]}))
+        # TODO: checar se posso só tirar essa declaracao de pd.DataFrame e só dps no final dar um concatzao em tudo direto nos dicionarios
 
-        # Poem na forma de um dataframe, cada linha um gene e suas informações relativas 
-        temp= pd.DataFrame({'term': [gmt_names[i]]*len(gmt_genes[i]), 'hier':  [gmt_desc[i]]*len(gmt_genes[i]), 'gene' : gmt_genes[i] })
-        res = pd.concat([res,temp])
-
-    # reseta o indice
-    res = res.reset_index(drop=True)    
-
-    #relação entre nomes e descricões  (é pra isso q essa variavel serve? no original é um datafra esquisito, achei q assim ia ser mais otimizado)   
-    path_desc = dict(zip(gmt_names,gmt_desc))
-
-    return res, path_desc , gmt_names
+    res = pd.concat(temp)
+    res = res.reset_index(drop=True)
+    return res
