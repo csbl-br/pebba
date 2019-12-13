@@ -2,12 +2,10 @@ import numpy as np
 import pandas as pd
 import sys
 
-from convertido_final.analysis.ORA import run_ORA
+from pebba.analysis.ORA import run_ORA
 
 
-def generate_ORA_dataframe(
-    deg, dict_genes_by_pathway, direction, min_genes, max_genes, p_cut
-):
+def generate_ORA_dataframe(deg, dict_genes_by_pathway, direction, min_genes, max_genes):
     """
     """
     all_genes = deg["Gene.symbol"]
@@ -74,6 +72,3 @@ def run_ORA_analysis_for_different_top_genes_ranges(
     ORA_dataframe = (ORA_dataframe.apply(np.log10)) * (-1)
 
     return ORA_dataframe
-
-
-##############################################################

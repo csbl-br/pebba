@@ -1,15 +1,11 @@
 import os
 import sys
 
-from convertido_final.utils.gmt_utils import read_gmt
-from convertido_final.utils.deg_utils import get_deg
-from convertido_final.analysis.statistics_of_ORA_exploration import (
-    generate_ORA_statistics,
-)
-from convertido_final.analysis.ORA_hyperparameter_exploration import (
-    generate_ORA_dataframe,
-)
-from convertido_final.visualization import create_interactive_plot
+from pebba.utils.gmt_utils import read_gmt
+from pebba.utils.deg_utils import get_deg
+from pebba.analysis.statistics_of_ORA_exploration import generate_ORA_statistics
+from pebba.analysis.ORA_hyperparameter_exploration import generate_ORA_dataframe
+from pebba.visualization import create_interactive_plot
 
 
 def pebba(
@@ -35,7 +31,7 @@ def pebba(
     dict_genes_by_pathway = read_gmt(gmt_file)
 
     ORA_dataframe_all_directions = get_ORA_dataframes(
-        deg, dict_genes_by_pathway, min_genes, max_genes, p_cut
+        deg, dict_genes_by_pathway, min_genes, max_genes
     )
     statistics_for_plot = get_statistics_for_plots(ORA_dataframe_all_directions, p_cut)
 
@@ -58,13 +54,13 @@ def pebba(
 
 def validate_range_of_inputs(min_genes, max_genes, p_cut):
     if min_genes < 50 or min_genes > 2900:
-        sys.exit("Variable min_genes must be between 50 and 2900 genes")
+        raise ValueError("Variable min_genes must be between 50 and 2900 genes")
 
     if max_genes < 100 or max_genes > 3000:
-        sys.exit("Variable max_genes must be between 100 and 3000 genes")
+        raise ValueError("Variable max_genes must be between 100 and 3000 genes")
 
     if p_cut < 0.00001 or p_cut > 1:
-        sys.exit("Variable p_cut must be between 0.00001 and 1")
+        raise ValueError("Variable p_cut must be between 0.00001 and 1")
 
 
 def create_results_directory(results_dir, force):
@@ -101,11 +97,11 @@ def set_analysis_name(file_in):
 # instead of doing 3 times each step
 
 
-def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes, p_cut):
+def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes):
     directions = ["up", "down", "any"]
     ORA_dataframe_all_directions = {
         direction: generate_ORA_dataframe(
-            deg, dict_genes_by_pathway, direction, min_genes, max_genes, p_cut
+            deg, dict_genes_by_pathway, direction, min_genes, max_genes
         )
         for direction in directions
     }

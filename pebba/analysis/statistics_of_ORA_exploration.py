@@ -3,6 +3,7 @@ import numpy as np
 
 
 def generate_ORA_statistics(path_table, p_cut, direction):
+    # TODO: the only thing used in here is times_significant, talk to helder and delete everything we won't use
     df = pd.DataFrame()
     df["MaxR"] = path_table.max()
     df["SumR"] = path_table.sum()

@@ -45,7 +45,8 @@ def run_hipergeometric_tests(
     # TODO: ver se stats.hypergeom.sf ja n aceita os negocios todos em paralelo
     result = {
         pathway: stats.hypergeom.sf(
-            len(differenttially_expressed_genes_by_pathway[pathway]) - 1,
+            len(differenttially_expressed_genes_by_pathway[pathway])
+            - 1,  # pq esse menos 1? pypathway usa isso e eu n sei pq
             len(all_genes),
             len(genes_by_pathway[pathway]),
             len(top_genes),
