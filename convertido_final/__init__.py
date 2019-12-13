@@ -1,1 +1,1 @@
-from convertido_final.utils import read_gmt_hier
+from convertido_final.utils.gmt_utils import read_gmt

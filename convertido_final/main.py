@@ -1,65 +1,53 @@
 import os
 import sys
 
-import pandas as pd
-
-from convertido_final.pebba import _cutoff_path
-from convertido_final.pebba import _get_pathway
-from convertido_final.utils import read_gmt_hier
+from convertido_final.utils.gmt_utils import read_gmt
+from convertido_final.utils.deg_utils import get_deg
+from convertido_final.analysis.statistics_of_ORA_exploration import (
+    generate_ORA_statistics,
+)
+from convertido_final.analysis.ORA_hyperparameter_exploration import (
+    generate_ORA_dataframe,
+)
 from convertido_final.visualization import create_interactive_plot
 
 
-def pebba(deg_file,
-          gmt_file,
-          gene_col="Gene.symbol",
-          logFC_col="logFC",
-          pvalue_col="P.Value",
-          min_genes=100,
-          max_genes=1500,
-          p_cut=0.2,
-          verbose=True,
-          analysis_name=None,
-          results_dir="Results",
-          force=False):
+def pebba(
+    deg_file,
+    gmt_file,
+    gene_col="Gene.symbol",
+    logFC_col="logFC",
+    pvalue_col="P.Value",
+    min_genes=100,
+    max_genes=1500,
+    p_cut=0.2,
+    analysis_name=None,
+    results_dir="Results",
+    force=False,
+):
     validate_range_of_inputs(min_genes, max_genes, p_cut)
-
-    deg = get_deg(deg_file)
-    deg = rename_deg_columns(deg, gene_col, logFC_col, pvalue_col)
-
-    # Get information from all unique terms
-    gene_to_pathway_relationship_df = read_gmt_hier(gmt_file)  # hier is useless,
-    # TODO: pass the utils gmt reader into the run_enrich function to improve modularity
-    # TODO: gene_to_pathway_relationship_df and dict_genes_by_pathway contain the same information, transform into one thing only
-    f = lambda df: [gene for gene in df["gene"]]
-    dict_genes_by_pathway = dict(gene_to_pathway_relationship_df.groupby(["term"]).apply(f))
-
-    directions = ["up", "down", "any"]
-
-    dfs = dict()
-    paths = dict()
-    cut_paths = dict()
-    for direction in directions:
-        if verbose:
-            print(direction + "\nGetting Pathways")
-        dfs[direction], paths[direction] = _get_pathway(deg, direction, min_genes, max_genes, p_cut)
-        if verbose:
-            print("Getting Pathway Cutoff")
-
-        cut_paths[direction] = _cutoff_path(paths[direction], p_cut, direction)
-
-    if verbose:
-        print("Saving heatmaps")
 
     create_results_directory(results_dir, force)
     if analysis_name is None:
         analysis_name = set_analysis_name(deg_file)
 
-    for direction in directions:
-        create_interactive_plot(paths[direction], dict_genes_by_pathway, direction, analysis_name, cut_paths[direction],
-                                results_dir)
+    deg = get_deg(deg_file, gene_col, logFC_col, pvalue_col)
+    dict_genes_by_pathway = read_gmt(gmt_file)
 
-    if verbose:
-        print("Done")
+    ORA_dataframe_all_directions = get_ORA_dataframes(
+        deg, dict_genes_by_pathway, min_genes, max_genes, p_cut
+    )
+    statistics_for_plot = get_statistics_for_plots(ORA_dataframe_all_directions, p_cut)
+
+    create_interactive_plots(
+        ORA_dataframe_all_directions,
+        dict_genes_by_pathway,
+        analysis_name,
+        statistics_for_plot,
+        results_dir,
+    )
+
+    return
 
 
 ########################################################################################################################
@@ -86,37 +74,11 @@ def create_results_directory(results_dir, force):
         os.makedirs("Results/Heatmaps")
     else:
         if not force:
-            sys.exit("Stopping analysis: " + results_dir + " already exists! Use force=True to overwrite.")
-
-
-def get_deg(file_in):
-    """
-    TODO: do a better job at documentation in this function,
-    TODO: take the name of the columns to rename everything and stop having to pass around column names as parameters
-    DEG = Differentially Expressed Genes
-
-    :param file_in:
-    :return:
-    """
-    if isinstance(file_in, str):
-        deg_list = pd.read_csv(file_in, sep="\t")
-
-    elif isinstance(file_in, pd.DataFrame):
-        deg_list = file_in
-
-    else:
-        raise TypeError("Path to file or Pandas DataFrame expected.")
-
-    # Remove rows that do not have a valid gene symbol
-    return deg_list.dropna()
-
-
-def rename_deg_columns(deg, gene_col, logFC_col, pvalue_col):
-    deg = deg.rename(columns={gene_col: "Gene.symbol",
-                              logFC_col: "logFC",
-                              pvalue_col: "P.Value"})
-
-    return deg
+            sys.exit(
+                "Stopping analysis: "
+                + results_dir
+                + " already exists! Use force=True to overwrite."
+            )
 
 
 def set_analysis_name(file_in):
@@ -126,6 +88,57 @@ def set_analysis_name(file_in):
     :return: string
     """
     if isinstance(file_in, str):
-        return os.path.splitext(os.path.basename(file_in))[0]  # pega o basename e tira a extensao
+        return os.path.splitext(os.path.basename(file_in))[
+            0
+        ]  # pega o basename e tira a extensao
     else:
         return "PEBBA_analysis"
+
+
+####################################################################################3
+# TODO: On a second round of refactoring, change the program structure to get rid of this functions.
+# The idea is to generate the ORA dataframe, then the statistics and then save the plot uninterupted for one direction at a time,
+# instead of doing 3 times each step
+
+
+def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes, p_cut):
+    directions = ["up", "down", "any"]
+    ORA_dataframe_all_directions = {
+        direction: generate_ORA_dataframe(
+            deg, dict_genes_by_pathway, direction, min_genes, max_genes, p_cut
+        )
+        for direction in directions
+    }
+
+    return ORA_dataframe_all_directions
+
+
+def get_statistics_for_plots(ORA_dataframe_all_directions, p_cut):
+    directions = ["up", "down", "any"]
+    statistics_for_plot = {
+        direction: generate_ORA_statistics(
+            ORA_dataframe_all_directions[direction], p_cut, direction
+        )
+        for direction in directions
+    }
+
+    return statistics_for_plot
+
+
+def create_interactive_plots(
+    ORA_dataframe_all_directions,
+    dict_genes_by_pathway,
+    analysis_name,
+    statistics_for_plot,
+    results_dir,
+):
+    directions = ["up", "down", "any"]
+    for direction in directions:
+        create_interactive_plot(
+            ORA_dataframe_all_directions[direction],
+            dict_genes_by_pathway,
+            direction,
+            analysis_name,
+            statistics_for_plot[direction],
+            results_dir,
+        )
