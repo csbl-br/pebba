@@ -1,1 +1,1 @@
-from pebba.utils.gmt_utils import read_gmt
+from pebba.main import pebba

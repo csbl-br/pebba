@@ -40,7 +40,7 @@ def sort_deg_by_direction(direction, deg_list, max_genes):
         top_genes = deg_list.sort_values(by="logFC", ascending=True).head(n=max_genes)
     else:
         sys.exit("Invalid direction argument")
-    top_genes["Gene.Symbol"] = top_genes["Gene.Symbol"].astype(str)
+    top_genes["Gene.symbol"] = top_genes["Gene.symbol"].astype(str)
     return top_genes
 
 
@@ -61,8 +61,8 @@ def run_ORA_analysis_for_different_top_genes_ranges(
     ):  # max_genes +1 to include the number max_genes in the range
         top_i_genes = top_genes.loc[0:i, "Gene.symbol"]
         ORA_result_i = run_ORA(top_i_genes, all_genes, gmt_file)
-        ORA_result_i.columns = ["term", str(i)]
-        ORA_result_i = ORA_result_i.set_index("term", drop=True)
+        ORA_result_i.columns = [str(i)]  # ["term", str(i)]
+        # ORA_result_i = ORA_result_i.set_index("term", drop=True)
 
         ORA_results.append(ORA_result_i)
 

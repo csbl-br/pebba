@@ -32,7 +32,9 @@ def generate_genes_by_pathway(all_genes, gmt_file):
 def generate_differenttially_expressed_genes_by_pathway(top_genes, gmt_file):
     # by pathway, genes that are differentially expressed
     differenttially_expressed_genes_by_pathway = {
-        pathway: list(set(genes) & set([str(x) for x in top_genes]))
+        pathway: list(
+            set(genes) & set([str(x) for x in top_genes])
+        )  # TODO: passar ess str(x) pra fora, fazer de uma vez em todos os topgenes antes de comecar a passar pra ca
         for pathway, genes in gmt_file.items()
     }
     return differenttially_expressed_genes_by_pathway
@@ -59,4 +61,4 @@ def run_hipergeometric_tests(
 def apply_fdr_correction(result):
     _, o, _, _ = multicomp.multipletests(list(result.values()), method="fdr_bh")
     fdr = {list(result.keys())[i]: o[i] for i in range(len(list(result.keys())))}
-    return pd.DataFrame(fdr)
+    return pd.DataFrame.from_dict(data=fdr, orient="index", columns=["to_be_changed"])
