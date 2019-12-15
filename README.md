@@ -16,8 +16,10 @@ https://github.com/iseekwonderful/PyPathway/blob/master/pypathway/analysis/ora/_
 
 
 teste hipergeometrico (hipergeom sf):
+
 https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.hypergeom.html
 https://github.com/scipy/scipy/blob/v0.14.0/scipy/stats/_discrete_distns.py#L347
+https://github.com/scipy/scipy/blob/master/scipy/stats/_discrete_distns.py#L478
 
 fdr_bh:
 https://www.statsmodels.org/stable/generated/statsmodels.stats.multitest.multipletests.html
