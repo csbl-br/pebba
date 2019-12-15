@@ -54,7 +54,7 @@ def get_df_for_new_run(run_times):
 
 
 if __name__ == "__main__":
-    timing_pebba(3)
+    timing_pebba()
 
 # for n = 10 we got a mean of 273.2
 # near 4,5 minutes

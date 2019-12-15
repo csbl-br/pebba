@@ -8,17 +8,12 @@ from pebba.analysis.ORA import run_ORA
 def generate_ORA_dataframe(deg, dict_genes_by_pathway, direction, min_genes, max_genes):
     """
     """
-    all_genes = deg["Gene.symbol"]
-
+    number_of_genes_in_deg = deg["Gene.symbol"].size
     top_genes = get_top_genes(deg, direction, max_genes)
 
     ORA_dataframe = run_ORA_analysis_for_different_top_genes_ranges(
-        min_genes, max_genes, top_genes, all_genes, dict_genes_by_pathway
+        min_genes, max_genes, top_genes, number_of_genes_in_deg, dict_genes_by_pathway
     )
-    # Aqui tinha toda a parte de fazer sumario,
-    # dar merge com df original e ordenar ele por "first top cut significant" e dropar tudo depois.
-    # Como essa ordenacao e sumario n fazem o menor sentido eu deletei tudo.
-
     return ORA_dataframe
 
 
@@ -53,21 +48,16 @@ def sort_top_genes_by_pi_value(top_genes):
 
 
 def run_ORA_analysis_for_different_top_genes_ranges(
-    min_genes, max_genes, top_genes, all_genes, gmt_file
+    min_genes, max_genes, top_genes, number_of_genes_in_deg, gmt_file
 ):
     ORA_results = []
-    for i in range(
-        min_genes, max_genes + 1, 50
-    ):  # max_genes +1 to include the number max_genes in the range
+    for i in range(min_genes, max_genes + 1, 50):
         top_i_genes = top_genes.loc[0:i, "Gene.symbol"]
-        ORA_result_i = run_ORA(top_i_genes, all_genes, gmt_file)
-        ORA_result_i.columns = [str(i)]  # ["term", str(i)]
-        # ORA_result_i = ORA_result_i.set_index("term", drop=True)
-
+        ORA_result_i = run_ORA(top_i_genes, number_of_genes_in_deg, gmt_file)
+        ORA_result_i.columns = [str(i)]
         ORA_results.append(ORA_result_i)
 
     ORA_dataframe = pd.concat(ORA_results, axis=1, join="outer")
-
     ORA_dataframe.fillna(1.0)
     ORA_dataframe = (ORA_dataframe.apply(np.log10)) * (-1)
 

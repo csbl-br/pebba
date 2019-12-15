@@ -1,7 +1,7 @@
 import os
 import sys
 
-from pebba.utils.gmt_utils import read_gmt
+from pebba.utils.gmt_utils import get_gmt
 from pebba.utils.deg_utils import get_deg
 from pebba.analysis.statistics_of_ORA_exploration import generate_ORA_statistics
 from pebba.analysis.ORA_hyperparameter_exploration import generate_ORA_dataframe
@@ -28,18 +28,18 @@ def pebba(
         analysis_name = set_analysis_name(deg_file)
 
     deg = get_deg(deg_file, gene_col, logFC_col, pvalue_col)
-    dict_genes_by_pathway = read_gmt(gmt_file)
+    dict_of_genes_by_pathway = get_gmt(gmt_file, all_genes_in_deg=deg["Gene.symbol"])
 
     ORA_dataframe_all_directions = get_ORA_dataframes(
-        deg, dict_genes_by_pathway, min_genes, max_genes
+        deg, dict_of_genes_by_pathway, min_genes, max_genes
     )
     statistics_for_plot = get_statistics_for_plots(ORA_dataframe_all_directions, p_cut)
 
     create_interactive_plots(
         ORA_dataframe_all_directions,
-        dict_genes_by_pathway,
-        analysis_name,
+        dict_of_genes_by_pathway,
         statistics_for_plot,
+        analysis_name,
         results_dir,
     )
 
@@ -123,8 +123,8 @@ def get_statistics_for_plots(ORA_dataframe_all_directions, p_cut):
 def create_interactive_plots(
     ORA_dataframe_all_directions,
     dict_genes_by_pathway,
-    analysis_name,
     statistics_for_plot,
+    analysis_name,
     results_dir,
 ):
     directions = ["up", "down", "any"]
