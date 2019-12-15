@@ -66,7 +66,6 @@ def validate_range_of_inputs(min_genes, max_genes, p_cut):
 def create_results_directory(results_dir, force):
     results_dir = os.path.abspath(results_dir)
     if not os.path.exists(results_dir):
-        os.makedirs("Results/Tables")
         os.makedirs("Results/Heatmaps")
     else:
         if not force:

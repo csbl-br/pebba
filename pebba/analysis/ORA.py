@@ -21,20 +21,27 @@ def run_ORA(top_genes, all_genes, gmt_file):
 
 
 def generate_genes_by_pathway(all_genes, gmt_file):
-    # by pathway, genes member of the pathway
+    """
+    key = pathways
+    value = list of genes members of that pathway
+    """
+
+    # TODO: make the intersection between genes in the deg and the gmt before, outside and only once
     genes_by_pathway = {
-        pathway: list(set(genes) & set([str(x) for x in all_genes]))
+        pathway: list(set(genes) & set(all_genes))
         for pathway, genes in gmt_file.items()
     }
     return genes_by_pathway
 
 
 def generate_differenttially_expressed_genes_by_pathway(top_genes, gmt_file):
-    # by pathway, genes that are differentially expressed
+    """
+    key = pathway
+    value =  list of genes members of that pathway and reported as differentially expressed
+
+    """
     differenttially_expressed_genes_by_pathway = {
-        pathway: list(
-            set(genes) & set([str(x) for x in top_genes])
-        )  # TODO: passar ess str(x) pra fora, fazer de uma vez em todos os topgenes antes de comecar a passar pra ca
+        pathway: list(set(genes) & set(top_genes))
         for pathway, genes in gmt_file.items()
     }
     return differenttially_expressed_genes_by_pathway
@@ -43,15 +50,16 @@ def generate_differenttially_expressed_genes_by_pathway(top_genes, gmt_file):
 def run_hipergeometric_tests(
     all_genes, top_genes, genes_by_pathway, differenttially_expressed_genes_by_pathway
 ):
-    # TODO: calcular esses lens antes
+    len_all_genes = len(all_genes)
+    len_top_genes = len(top_genes)
     # TODO: ver se stats.hypergeom.sf ja n aceita os negocios todos em paralelo
     result = {
         pathway: stats.hypergeom.sf(
             len(differenttially_expressed_genes_by_pathway[pathway])
-            - 1,  # pq esse menos 1? pypathway usa isso e eu n sei pq
-            len(all_genes),
+            - 1,  # TODO: pq esse menos 1? pypathway usa isso e eu n sei pq
+            len_all_genes,
             len(genes_by_pathway[pathway]),
-            len(top_genes),
+            len_top_genes,
         )
         for pathway, genes in genes_by_pathway.items()
     }
