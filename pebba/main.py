@@ -46,12 +46,6 @@ def pebba(
     return
 
 
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-
-
 def validate_range_of_inputs(min_genes, max_genes, p_cut):
     if min_genes < 50 or min_genes > 2900:
         raise ValueError("Variable min_genes must be between 50 and 2900 genes")
@@ -83,19 +77,17 @@ def set_analysis_name(file_in):
     :return: string
     """
     if isinstance(file_in, str):
-        return os.path.splitext(os.path.basename(file_in))[
-            0
-        ]  # pega o basename e tira a extensao
+        return os.path.splitext(os.path.basename(file_in))[0]
     else:
         return "PEBBA_analysis"
 
 
-####################################################################################3
+####################################################################################
 # TODO: On a second round of refactoring, change the program structure to get rid of this functions.
 # The idea is to generate the ORA dataframe, then the statistics and then save the plot uninterupted for one direction at a time,
 # instead of doing 3 times each step
 
-# TODO: tirar todos os sys.exit do programa e trocar por exceptions decentes
+# TODO: Substitute sys.exit calls by exceptions
 
 
 def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes):

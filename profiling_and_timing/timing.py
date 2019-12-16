@@ -7,7 +7,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "pebba"))
 from pebba.main import pebba
 
-print("ok")
+print("starting")
 
 
 def timing_pebba(n=10):
@@ -19,8 +19,8 @@ def timing_pebba(n=10):
 
 
 def run_n_times(n):
-    deg_in = "../data/GSE49757_Septic_vs_Healthy.txt"
-    gmt_in = "../data/Reactome_2016_15and100Genes.gmt"
+    deg_in = "data/GSE49757_Septic_vs_Healthy.txt"
+    gmt_in = "data/Reactome_2016_15and100Genes.gmt"
     run_times = []
     for i in range(n):
         print("Iteration number " + str(i + 1) + " out of " + str(n))
@@ -58,5 +58,4 @@ def get_df_for_new_run(run_times):
 if __name__ == "__main__":
     timing_pebba()
 
-# for n = 10 we got a mean of 273.2
-# near 4,5 minutes
+# In the future, add a clean up step to delete the results folder

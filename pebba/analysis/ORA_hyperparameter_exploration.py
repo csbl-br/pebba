@@ -8,13 +8,13 @@ from pebba.analysis.top_genes import get_top_genes
 
 def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_genes):
     """
-    TODO: deixar usuario escolher nunmero de max workers
+    TODO: Give the user the option to input max_workers
     """
     number_of_genes_in_deg = deg["Gene.symbol"].size
     top_genes = get_top_genes(deg, direction, max_genes)
 
     with ProcessPoolExecutor(max_workers=2) as executor:
-        teste = partial(
+        partial_function_for_ORA = partial(
             run_ORA_analysis_for_different_top_genes_ranges,
             top_genes=top_genes,
             genes_by_pathway=genes_by_pathway,
@@ -23,7 +23,9 @@ def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_gene
         # TODO: eh possivel q as iteracoes tenham duracoes muito diferentes? comecar de tras pra frente parece uma ideia bem melhor na real
         # DONE: n pareceu ter uma melhora significativa
         # range(min_genes, max_genes + 1, 50)
-        ORA_results = executor.map(teste, range(max_genes, min_genes - 1, -50))
+        ORA_results = executor.map(
+            partial_function_for_ORA, range(max_genes, min_genes - 1, -50)
+        )
 
     ORA_dataframe = pd.concat(ORA_results, axis=1, join="outer")
     ORA_dataframe.fillna(1.0)

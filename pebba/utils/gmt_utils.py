@@ -29,6 +29,7 @@ def preprocess_gmt(dict_of_genes_by_pathway, all_genes_in_deg):
     Genes not present in the DEG will be excluded of the analysis,
     in essence shortening the size of a given pathway.
     This may skew the results, users be advised to check your inputs as we assume they are consistent.
+    TODO: como dar credito pro pypathway e questão das licensas
     TODO: decidir se essa eh a politica q eu vou adotar mesmo, talvez adicionar mais um disclaimer em algum lugar
     TODO: pelo menos ter uma maneira de recuperar o q foi jogado fora pra deixar registrado
     """
@@ -36,5 +37,4 @@ def preprocess_gmt(dict_of_genes_by_pathway, all_genes_in_deg):
         pathway: list(set(genes) & set(all_genes_in_deg))
         for pathway, genes in dict_of_genes_by_pathway.items()
     }
-    # todo? : drop empty pathways
     return genes_by_pathway

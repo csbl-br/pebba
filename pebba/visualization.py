@@ -32,9 +32,9 @@ def create_interactive_plot(
 def create_heatmap(df):
     NGs = df.columns.tolist()
     pathways = df.index.tolist()
-    valores = [df[column].tolist() for column in df]
+    values = [df[column].tolist() for column in df]
 
-    trace = go.Heatmap(z=valores, y=NGs, x=pathways)
+    trace = go.Heatmap(z=values, y=NGs, x=pathways)
     return trace
 
 

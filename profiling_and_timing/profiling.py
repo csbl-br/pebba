@@ -7,13 +7,14 @@ sys.path.append(package_path)
 
 from pebba.main import pebba
 
-print("ok")
+print("Starting")
 # From the terminal:
 # python -m cProfile -o profiler_output.txt profiling.py
 # snakeviz profiler_output.txt
+# (This won't work for parallel code)
 if __name__ == "__main__":
     pebba(
-        "../data/GSE49757_Septic_vs_Healthy.txt",
-        "../data/Reactome_2016_15and100Genes.gmt",
+        "data/GSE49757_Septic_vs_Healthy.txt",
+        "data/Reactome_2016_15and100Genes.gmt",
         force=True,
     )

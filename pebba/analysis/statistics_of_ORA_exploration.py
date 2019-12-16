@@ -9,11 +9,10 @@ def generate_ORA_statistics(path_table, p_cut, direction):
     df["SumR"] = path_table.sum()
     path_cut_p = np.log10(p_cut) * (-1)
 
-    # How many pathways above path_cut_p (freq)
     how_many_pathways_above_cut = calculate_how_many_pathways_above_cut(
         path_table, path_cut_p, axis=0
     )
-    n_rows = len(path_table.index)  ######
+    n_rows = len(path_table.index)
     df["times"] = how_many_pathways_above_cut / n_rows
 
     df.columns = [
