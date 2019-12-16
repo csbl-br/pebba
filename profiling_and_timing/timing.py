@@ -33,7 +33,8 @@ def run_n_times(n):
 def save_results(run_times, n):
     df_new_run = get_df_for_new_run(run_times)
     try:
-        df = pd.read_csv("timing_performances_n" + str(n) + ".csv")
+        df = pd.read_csv("timing_performances_n" + str(n) + ".csv", index_col=0)
+        df.index = df.index.astype(int)
         df = pd.merge(df, df_new_run, left_index=True, right_index=True)
     except FileNotFoundError:
         df = df_new_run
@@ -50,6 +51,7 @@ def get_df_for_new_run(run_times):
         columns=[time_stamp + " run_time: "],
     )
     df_new_run.index.rename("Run Number i=", inplace=True)
+    df_new_run.index = df_new_run.index.astype(int)
     return df_new_run
 
 

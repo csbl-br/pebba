@@ -95,6 +95,8 @@ def set_analysis_name(file_in):
 # The idea is to generate the ORA dataframe, then the statistics and then save the plot uninterupted for one direction at a time,
 # instead of doing 3 times each step
 
+# TODO: tirar todos os sys.exit do programa e trocar por exceptions decentes
+
 
 def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes):
     directions = ["up", "down", "any"]
