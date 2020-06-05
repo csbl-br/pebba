@@ -1,3 +1,5 @@
+from werkzeug.datastructures import FileStorage
+
 def get_gmt(gmt_file, all_genes_in_deg):
     dict_of_genes_by_pathway = read_gmt(gmt_file)
     dict_of_genes_by_pathway = preprocess_gmt(
@@ -15,8 +17,11 @@ def read_gmt(file):
     :param file: the file path
     :return: the parsed dict
     """
-    with open(file) as fp:
-        file = fp.read()
+    if not isinstance(file,FileStorage):
+        with open(file) as fp:
+            file = fp.read()
+    else:
+        file = file.read()
     return {
         line.split("\t")[0]: [t for t in line.split("\t")[2:] if t]
         for line in file.split("\n")

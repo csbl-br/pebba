@@ -11,14 +11,10 @@ def read_deg(file_in):
     """
     DEG = Differentially Expressed Genes
     """
-    if isinstance(file_in, str):
-        deg = pd.read_csv(file_in, sep="\t")
-
-    elif isinstance(file_in, pd.DataFrame):
+    if isinstance(file_in, pd.DataFrame):
         deg = file_in
-
     else:
-        raise TypeError("Path to file or Pandas DataFrame expected.")
+        deg = pd.read_csv(file_in, sep="\t")
     return deg
 
 
