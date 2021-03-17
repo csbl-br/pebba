@@ -24,7 +24,7 @@ def create_interactive_plot(
         # paper_bgcolor="rgba(0,0,0,0)",  # background color for the paper of the plot
         plot_bgcolor="rgb(255,255,255)",  # background color for the plot
         xaxis=dict(
-            domain=[0, 0.80],
+            domain=[0.18, 1],
             showticklabels=False,
             mirror=True,
             showline=True,
@@ -33,7 +33,7 @@ def create_interactive_plot(
             matches="x2",
         ),
         xaxis2=dict(
-            domain=[0, 0.80],
+            domain=[0.18, 1],
             showticklabels=False,
             mirror=True,
             showline=True,
@@ -41,7 +41,7 @@ def create_interactive_plot(
             linecolor="rgb(33, 27, 22)",
         ),
         xaxis3=dict(
-            domain=[0.85, 1],
+            domain=[0, 0.15],
             anchor="y3",
             mirror=True,
             showline=True,
@@ -99,7 +99,6 @@ def create_heatmap(df):
         # ["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"], # red
         ["rgb(255,255,255)", "rgb(47, 187, 237)", "rgb(41, 128, 185)"],  # blue
         colorbar={
-            "x": 0.8,
             "len": 0.7,
             "y": 1,
             "yanchor": "top",
