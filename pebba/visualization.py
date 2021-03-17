@@ -3,6 +3,15 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 from pebba.analysis.auxiliary_analysis import calculate_how_many_above_cut
 
+# this dict manipulation will only work o python 3.5<=
+# https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries-in-a-single-expression-taking-union-of-dictiona
+base_layout = dict(
+    mirror=True,
+    showline=True,
+    linewidth=1,
+    linecolor="rgb(33, 27, 22)",
+)
+
 
 def create_interactive_plot(
     df,
@@ -21,65 +30,46 @@ def create_interactive_plot(
 
     layout = go.Layout(
         hoverlabel=dict(
-            # bgcolor="black", #too black for my taste
+            # bgcolor="black", #too black for my taste #TODO find a good color profile
         ),
+        template="plotly_white",
         showlegend=False,
         # paper_bgcolor="rgba(255,255,255,0)",  # background color for the paper of the plot
-        plot_bgcolor="rgb(255,255,255)",  # background color for the plot
-        xaxis=dict(
-            domain=[0.18, 1],
-            mirror=True,
-            showline=True,
-            linewidth=1,
-            linecolor="rgb(33, 27, 22)",
-            matches="x2",
-            showticklabels=False,
-        ),
-        xaxis2=dict(
-            domain=[0.18, 1],
-            mirror=True,
-            showline=True,
-            linewidth=1,
-            linecolor="rgb(33, 27, 22)",
-            showticklabels=False,
-            anchor="y2",
-        ),
-        xaxis3=dict(
-            domain=[0, 0.15],
-            anchor="y3",
-            mirror=True,
-            showline=True,
-            linewidth=1,
-            linecolor="rgb(33, 27, 22)",
-            gridcolor="rgb(200, 200, 200)",
-            autorange="reversed",
-        ),
-        yaxis=dict(
-            domain=[0.30, 1],
-            mirror=True,
-            showline=True,
-            linewidth=1,
-            linecolor="rgb(33, 27, 22)",
-            matches="y3",
-        ),
-        yaxis2=dict(
-            domain=[0, 0.25],
-            autorange="reversed",
-            anchor="x2",
-            mirror=True,
-            showline=True,
-            linewidth=1,
-            linecolor="rgb(33, 27, 22)",
-            gridcolor="rgb(200, 200, 200)",
-        ),
-        yaxis3=dict(
-            domain=[0.30, 1],
-            anchor="x3",
-            mirror=True,
-            showline=True,
-            linewidth=1,
-            linecolor="rgb(33, 27, 22)",
-        ),
+        # plot_bgcolor="rgb(255,255,255)",  # background color for the plot
+        xaxis={
+            **base_layout,
+            "domain": [0.18, 1],
+            "matches": "x2",
+            "showticklabels": False,
+        },
+        xaxis2={
+            **base_layout,
+            "domain": [0.18, 1],
+            "showticklabels": False,
+            "anchor": "y2",
+        },
+        xaxis3={
+            **base_layout,
+            "domain": [0, 0.15],
+            "anchor": "y3",
+            "autorange": "reversed",
+        },
+        yaxis={
+            **base_layout,
+            "domain": [0.30, 1],
+            "matches": "y3",
+        },
+        yaxis2={
+            **base_layout,
+            "domain": [0, 0.25],
+            "autorange": "reversed",
+            "anchor": "x2",
+        },
+        yaxis3={
+            **base_layout,
+            "domain": [0.30, 1],
+            "anchor": "x3",
+        },
     )
     figure = go.Figure(data=data, layout=layout)
 
@@ -103,15 +93,12 @@ def create_heatmap(df):
         z=values,
         y=NGs,
         x=pathways,
-        colorscale=
-        # ["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"], # red
-        ["rgb(255,255,255)", "rgb(47, 187, 237)", "rgb(41, 128, 185)"],  # blue
+        colorscale=["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],  # red
+        # ["rgb(255,255,255)", "rgb(47, 187, 237)", "rgb(41, 128, 185)"],  # blue
         colorbar={
             "len": 0.7,
             "y": 1,
             "yanchor": "top",
-            # "ticklabelposition": "inside top",
-            # "tickfont": {"color": "rgb(0,0,0)"},
         },
         hovertemplate="<b>Pathway: </b>%{x} <br>"
         + "<b>Gene cut: </b>%{y} <br>"
@@ -129,9 +116,8 @@ def create_barplot_pathway_counts(df, score_cut):
         xaxis="x2",
         yaxis="y2",
         marker={
-            "color":
-            # "rgb(135, 57, 57)", #red
-            "rgb(126, 139, 158)",  # blue
+            "color": "rgb(135, 57, 57)",  # red
+            # "rgb(126, 139, 158)",  # blue
         },
         hovertemplate="<b>Pathway: </b>%{x} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{y}",
@@ -148,9 +134,8 @@ def create_barplot_genescut_count(df, score_cut):
         xaxis="x3",
         yaxis="y3",
         marker={
-            "color":
-            # "rgb(135, 57, 57)", #red
-            "rgb(126, 139, 158)",  # blue
+            "color": "rgb(135, 57, 57)",  # red
+            # "rgb(126, 139, 158)",  # blue
         },
         # TODO decide a better name than gene cut and use it across the code
         hovertemplate="<b>Gene cut: </b>%{y} <br>"
