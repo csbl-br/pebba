@@ -88,6 +88,7 @@ def create_interactive_plot(
         output_type=output_type,
         config={
             "displaylogo": False,
+            "modeBarButtonsToRemove": ["pan2d", "toggleSpikelines"],
         },
     )
 
