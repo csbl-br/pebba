@@ -23,7 +23,8 @@ def read_gmt(file):
     # else:
     #     file = file.read()
 
-    file = file.read()
+    with open(file) as fp:
+        file = fp.read()
 
     return {
         line.split("\t")[0]: [t for t in line.split("\t")[2:] if t]
