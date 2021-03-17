@@ -38,6 +38,7 @@ def pebba(
         dict_of_genes_by_pathway,
         analysis_name,
         results_dir,
+        p_cut,
     )
 
     return
@@ -104,6 +105,7 @@ def create_interactive_plots(
     dict_genes_by_pathway,
     analysis_name,
     results_dir,
+    p_cut,
 ):
     directions = ["up", "down", "any"]
     for direction in directions:
@@ -113,4 +115,5 @@ def create_interactive_plots(
             direction,
             analysis_name,
             results_dir,
+            p_cut,
         )

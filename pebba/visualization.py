@@ -1,3 +1,4 @@
+import numpy as np
 import plotly.graph_objs as go
 from plotly.offline import plot
 
@@ -10,12 +11,14 @@ def create_interactive_plot(
     direction,
     analysis_name,
     results_dir,
+    p_cut,
     output_type="file",  # or div
-    score_cut=1.0,  # TODO choose a sensible default for the score_cut and allow the user to input it
 ):
     heatmap = create_heatmap(df)
-    barplot1 = create_barplot_pathway_counts(df, score_cut)
-    barplot2 = create_barplot_genescut_count(df, score_cut)
+
+    path_cut_p = np.log10(p_cut) * (-1)
+    barplot1 = create_barplot_pathway_counts(df, path_cut_p)
+    barplot2 = create_barplot_genescut_count(df, path_cut_p)
 
     data = [heatmap, barplot1, barplot2]
 
@@ -35,7 +38,7 @@ def create_interactive_plot(
 
 def generate_layout():
 
-    # this dict manipulation will only work o python 3.5<=
+    # this dict manipulation will only work on python 3.5<=
     # https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries-in-a-single-expression-taking-union-of-dictiona
     base_layout = dict(
         mirror=True,
