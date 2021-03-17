@@ -42,6 +42,7 @@ def create_interactive_plot(
             linewidth=1,
             linecolor="rgb(33, 27, 22)",
             showticklabels=False,
+            anchor="y2",
         ),
         xaxis3=dict(
             domain=[0, 0.15],
@@ -151,8 +152,9 @@ def create_barplot_genescut_count(df, score_cut):
             # "rgb(135, 57, 57)", #red
             "rgb(126, 139, 158)",  # blue
         },
+        # TODO decide a better name than gene cut and use it across the code
         hovertemplate="<b>Gene cut: </b>%{y} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{x}",
-        name="",  # TODO decide a better name than gene cut and use it across the code
+        name="",
     )
     return barplot
