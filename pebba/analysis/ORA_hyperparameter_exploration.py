@@ -30,7 +30,18 @@ def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_gene
     ORA_dataframe.fillna(1.0)
     ORA_dataframe = (ORA_dataframe.apply(np.log10)) * (-1)
 
+    ORA_dataframe = _reorder_df_by_mean_expression(ORA_dataframe)
+
     return ORA_dataframe
+
+
+def _reorder_df_by_mean_expression(df):
+    """
+    Sort an ORA dataframe according to the mean score value of each pathway
+    """
+    new_index = df.mean(axis=1).sort_values(ascending=False).index
+    df = df.reindex(new_index)
+    return df
 
 
 def run_ORA_analysis_for_different_top_genes_ranges(
