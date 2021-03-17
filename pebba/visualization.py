@@ -3,15 +3,6 @@ from plotly.offline import plot
 
 from pebba.analysis.auxiliary_analysis import calculate_how_many_above_cut
 
-# this dict manipulation will only work o python 3.5<=
-# https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries-in-a-single-expression-taking-union-of-dictiona
-base_layout = dict(
-    mirror=True,
-    showline=True,
-    linewidth=1,
-    linecolor="rgb(33, 27, 22)",
-)
-
 
 def create_interactive_plot(
     df,
@@ -28,14 +19,39 @@ def create_interactive_plot(
 
     data = [heatmap, barplot1, barplot2]
 
+    layout = generate_layout()
+    figure = go.Figure(data=data, layout=layout)
+
+    plot(
+        figure,
+        filename=results_dir + "/Heatmaps/" + analysis_name + "_" + direction + ".html",
+        output_type=output_type,
+        config={
+            "displaylogo": False,
+            "modeBarButtonsToRemove": ["pan2d", "toggleSpikelines"],
+        },
+    )
+
+
+def generate_layout():
+
+    # this dict manipulation will only work o python 3.5<=
+    # https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries-in-a-single-expression-taking-union-of-dictiona
+    base_layout = dict(
+        mirror=True,
+        showline=True,
+        linewidth=1,
+        linecolor="rgb(33, 27, 22)",
+    )
+
     layout = go.Layout(
-        hoverlabel=dict(
-            # bgcolor="black", #too black for my taste #TODO find a good color profile
-        ),
-        template="plotly_white",
-        showlegend=False,
         # paper_bgcolor="rgba(255,255,255,0)",  # background color for the paper of the plot
         # plot_bgcolor="rgb(255,255,255)",  # background color for the plot
+        # hoverlabel=dict(
+        #     # bgcolor="black", #too black for my taste #TODO find a good color profile
+        # ),
+        template="plotly_white",
+        showlegend=False,
         xaxis={
             **base_layout,
             "domain": [0.18, 1],
@@ -71,17 +87,7 @@ def create_interactive_plot(
             "anchor": "x3",
         },
     )
-    figure = go.Figure(data=data, layout=layout)
-
-    plot(
-        figure,
-        filename=results_dir + "/Heatmaps/" + analysis_name + "_" + direction + ".html",
-        output_type=output_type,
-        config={
-            "displaylogo": False,
-            "modeBarButtonsToRemove": ["pan2d", "toggleSpikelines"],
-        },
-    )
+    return layout
 
 
 def create_heatmap(df):
