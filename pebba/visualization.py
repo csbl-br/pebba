@@ -1,5 +1,5 @@
 import plotly.graph_objs as go
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+from plotly.offline import plot
 
 from pebba.analysis.auxiliary_analysis import calculate_how_many_above_cut
 
