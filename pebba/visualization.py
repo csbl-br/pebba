@@ -20,25 +20,28 @@ def create_interactive_plot(
     data = [heatmap, barplot1, barplot2]
 
     layout = go.Layout(
+        hoverlabel=dict(
+            # bgcolor="black", #too black for my taste
+        ),
         showlegend=False,
-        # paper_bgcolor="rgba(0,0,0,0)",  # background color for the paper of the plot
+        # paper_bgcolor="rgba(255,255,255,0)",  # background color for the paper of the plot
         plot_bgcolor="rgb(255,255,255)",  # background color for the plot
         xaxis=dict(
             domain=[0.18, 1],
-            showticklabels=False,
             mirror=True,
             showline=True,
             linewidth=1,
             linecolor="rgb(33, 27, 22)",
             matches="x2",
+            showticklabels=False,
         ),
         xaxis2=dict(
             domain=[0.18, 1],
-            showticklabels=False,
             mirror=True,
             showline=True,
             linewidth=1,
             linecolor="rgb(33, 27, 22)",
+            showticklabels=False,
         ),
         xaxis3=dict(
             domain=[0, 0.15],
@@ -83,6 +86,9 @@ def create_interactive_plot(
         figure,
         filename=results_dir + "/Heatmaps/" + analysis_name + "_" + direction + ".html",
         output_type=output_type,
+        config={
+            "displaylogo": False,
+        },
     )
 
 
@@ -105,6 +111,10 @@ def create_heatmap(df):
             # "ticklabelposition": "inside top",
             # "tickfont": {"color": "rgb(0,0,0)"},
         },
+        hovertemplate="<b>Pathway: </b>%{x} <br>"
+        + "<b>Gene cut: </b>%{y} <br>"
+        + "<b>Enrichment Score: </b>%{z}",
+        name="",
     )
     return trace
 
@@ -121,6 +131,9 @@ def create_barplot_pathway_counts(df, score_cut):
             # "rgb(135, 57, 57)", #red
             "rgb(126, 139, 158)",  # blue
         },
+        hovertemplate="<b>Pathway: </b>%{x} <br>"
+        + "<b>Nº of times enrichment was detected: </b>%{y}",
+        name="",
     )
     return barplot
 
@@ -137,5 +150,8 @@ def create_barplot_genescut_count(df, score_cut):
             # "rgb(135, 57, 57)", #red
             "rgb(126, 139, 158)",  # blue
         },
+        hovertemplate="<b>Gene cut: </b>%{y} <br>"
+        + "<b>Nº of times enrichment was detected: </b>%{x}",
+        name="",  # TODO decide a better name than gene cut and use it across the code
     )
     return barplot
