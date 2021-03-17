@@ -3,7 +3,6 @@ import sys
 
 from pebba.utils.gmt_utils import get_gmt
 from pebba.utils.deg_utils import get_deg
-from pebba.analysis.statistics_of_ORA_exploration import generate_ORA_statistics
 from pebba.analysis.ORA_hyperparameter_exploration import generate_ORA_dataframe
 from pebba.visualization import create_interactive_plot
 
@@ -33,12 +32,10 @@ def pebba(
     ORA_dataframe_all_directions = get_ORA_dataframes(
         deg, dict_of_genes_by_pathway, min_genes, max_genes
     )
-    statistics_for_plot = get_statistics_for_plots(ORA_dataframe_all_directions, p_cut)
 
     create_interactive_plots(
         ORA_dataframe_all_directions,
         dict_of_genes_by_pathway,
-        statistics_for_plot,
         analysis_name,
         results_dir,
     )
@@ -83,7 +80,7 @@ def set_analysis_name(file_in):
 
 
 ####################################################################################
-# TODO: On a second round of refactoring, change the program structure to get rid of this functions.
+# TODO: On a second round of refactoring, change the program structure to get rid of these functions.
 # The idea is to generate the ORA dataframe, then the statistics and then save the plot uninterupted for one direction at a time,
 # instead of doing 3 times each step
 
@@ -102,22 +99,9 @@ def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes):
     return ORA_dataframe_all_directions
 
 
-def get_statistics_for_plots(ORA_dataframe_all_directions, p_cut):
-    directions = ["up", "down", "any"]
-    statistics_for_plot = {
-        direction: generate_ORA_statistics(
-            ORA_dataframe_all_directions[direction], p_cut, direction
-        )
-        for direction in directions
-    }
-
-    return statistics_for_plot
-
-
 def create_interactive_plots(
     ORA_dataframe_all_directions,
     dict_genes_by_pathway,
-    statistics_for_plot,
     analysis_name,
     results_dir,
 ):
@@ -128,6 +112,5 @@ def create_interactive_plots(
             dict_genes_by_pathway,
             direction,
             analysis_name,
-            statistics_for_plot[direction],
             results_dir,
         )

@@ -1,18 +1,23 @@
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
-
-# init_notebook_mode(connected=True)
+from pebba.analysis.auxiliary_analysis import calculate_how_many_above_cut
 
 
 def create_interactive_plot(
-    df, dict_genes_por_via, direction, analysis_name, statistics_for_plot, results_dir
+    df,
+    dict_genes_por_via,
+    direction,
+    analysis_name,
+    results_dir,
+    output_type="file",  # or div
+    score_cut=1.0,  # TODO choose a sensible default for the score_cut and allow the user to input it
 ):
     heatmap = create_heatmap(df)
-    barplot = create_barplot(dict_genes_por_via, df)
-    line_plot = plot_number_of_enriched_pathways(statistics_for_plot, direction)
+    barplot1 = create_barplot_pathway_counts(df, score_cut)
+    barplot2 = create_barplot_genescut_count(df, score_cut)
 
-    data = [heatmap, barplot, line_plot]
+    data = [heatmap, barplot1, barplot2]
 
     layout = go.Layout(
         showlegend=False,
@@ -77,6 +82,7 @@ def create_interactive_plot(
     plot(
         figure,
         filename=results_dir + "/Heatmaps/" + analysis_name + "_" + direction + ".html",
+        output_type=output_type,
     )
 
 
@@ -104,10 +110,10 @@ def create_heatmap(df):
     return trace
 
 
-def create_barplot(dict_genes_por_via, df):
+def create_barplot_pathway_counts(df, score_cut):
     barplot = go.Bar(
         x=df.index.tolist(),
-        y=[len(dict_genes_por_via[via]) for via in df.index.tolist()],
+        y=calculate_how_many_above_cut(df, path_cut_p=score_cut, axis_sum=1).tolist(),
         orientation="v",
         xaxis="x2",
         yaxis="y2",
@@ -120,17 +126,17 @@ def create_barplot(dict_genes_por_via, df):
     return barplot
 
 
-def plot_number_of_enriched_pathways(statistics_for_plot, direction):
+def create_barplot_genescut_count(df, score_cut):
     barplot = go.Bar(
-        x=statistics_for_plot["times_significant_" + direction].tolist(),
-        y=statistics_for_plot.index.tolist(),
+        x=calculate_how_many_above_cut(df, path_cut_p=score_cut, axis_sum=0).tolist(),
+        y=df.columns.tolist(),
         orientation="h",
         xaxis="x3",
         yaxis="y3",
         marker={
             "color":
-            # "rgb(135, 57, 57)",
-            "rgb(126, 139, 158)",
+            # "rgb(135, 57, 57)", #red
+            "rgb(126, 139, 158)",  # blue
         },
     )
     return barplot
