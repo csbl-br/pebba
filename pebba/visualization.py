@@ -38,7 +38,7 @@ def create_interactive_plot(
 
 def generate_layout():
 
-    # this dict manipulation will only work on python 3.5<=
+    # this dict manipulation will only work on python>=3.5
     # https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries-in-a-single-expression-taking-union-of-dictiona
     base_layout = dict(
         mirror=True,
@@ -102,8 +102,14 @@ def create_heatmap(df):
         z=values,
         y=NGs,
         x=pathways,
-        colorscale=["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],  # red
-        # ["rgb(255,255,255)", "rgb(47, 187, 237)", "rgb(41, 128, 185)"],  # blue
+        # red
+        # colorscale="rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],
+        # blue
+        colorscale=[
+            "rgb(255,255,255)",
+            "rgb(47, 187, 237)",
+            "rgb(41, 128, 185)",
+        ],
         colorbar={
             "len": 0.7,
             "y": 1,
@@ -125,9 +131,10 @@ def create_barplot_pathway_counts(df, score_cut):
         xaxis="x2",
         yaxis="y2",
         marker={
-            "color": "rgb(135, 57, 57)",  # red
-            # "rgb(126, 139, 158)",  # blue
+            #  "color": "rgb(135, 57, 57)",  # red
+            "color": "rgb(126, 139, 158)",  # blue
         },
+        hoverlabel=dict(bgcolor="rgb(71, 70, 130)"),
         hovertemplate="<b>Pathway: </b>%{x} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{y}",
         name="",
@@ -143,10 +150,11 @@ def create_barplot_genescut_count(df, score_cut):
         xaxis="x3",
         yaxis="y3",
         marker={
-            "color": "rgb(135, 57, 57)",  # red
-            # "rgb(126, 139, 158)",  # blue
+            #  "color": "rgb(135, 57, 57)",  # red
+            "color": "rgb(126, 139, 158)",  # blue
         },
-        # TODO decide a better name than gene cut and use it across the code
+        hoverlabel=dict(bgcolor="rgb(71, 70, 130)"),
+        # TODO pick a better name than gene cut and use it across the code
         hovertemplate="<b>Gene cut: </b>%{y} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{x}",
         name="",
