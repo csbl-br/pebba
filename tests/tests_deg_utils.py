@@ -1,4 +1,3 @@
-# import pytest
 import pandas as pd
 
 from pebba.utils.deg_utils import preprocess_deg
