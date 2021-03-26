@@ -102,14 +102,7 @@ def create_heatmap(df):
         z=values,
         y=NGs,
         x=pathways,
-        # red
-        # colorscale="rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],
-        # blue
-        colorscale=[
-            "rgb(255,255,255)",
-            "rgb(47, 187, 237)",
-            "rgb(41, 128, 185)",
-        ],
+        colorscale=["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],
         colorbar={
             "len": 0.7,
             "y": 1,
@@ -131,8 +124,7 @@ def create_barplot_pathway_counts(df, score_cut):
         xaxis="x2",
         yaxis="y2",
         marker={
-            #  "color": "rgb(135, 57, 57)",  # red
-            "color": "rgb(126, 139, 158)",  # blue
+            "color": "rgb(135, 57, 57)",  # red
         },
         hoverlabel=dict(bgcolor="rgb(71, 70, 130)"),
         hovertemplate="<b>Pathway: </b>%{x} <br>"
@@ -150,8 +142,7 @@ def create_barplot_genescut_count(df, score_cut):
         xaxis="x3",
         yaxis="y3",
         marker={
-            #  "color": "rgb(135, 57, 57)",  # red
-            "color": "rgb(126, 139, 158)",  # blue
+            "color": "rgb(135, 57, 57)",  # red
         },
         hoverlabel=dict(bgcolor="rgb(71, 70, 130)"),
         # TODO pick a better name than gene cut and use it across the code
