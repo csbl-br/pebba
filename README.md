@@ -1,26 +1,21 @@
-# Python-PEBBA
+# Pebba
 
 
-Fischer exact test + FDR correction BH
+TODO: description
 
-A ideia é:
-Dado um numero de genes diferencialmente expressos N (top_genes no meu caso) e um numero total M de genes no estudo, qual a probabilidade de que dada uma via de tamanho n eu tenha X genes diferencialmente expressos?
-
-Eu vou percorrendo via por via e realizando o teste para ver se o numero de genes diferencialmente expressos nela é suficiente para dizer que ela esta sendo diferencialmente expressa.
-
+## Install
+To install pebba, first clone this repository and install its dependencies with `pip install -r requirements.txt`.
+Then, install pebba in editable mode (unless you intend to deploy it in production, **do not** deploy it in editable mode): `pip install -e .`
 
 
+## Using pebba
+Once installed, pebba can be used as a standalone module:
 
-implementacao do teste na biblioteca q eu to usando (pypathway):
-https://github.com/iseekwonderful/PyPathway/blob/master/pypathway/analysis/ora/__init__.py#L58
+`python -m pebba <deg_file> <gmt_file>`
 
 
-teste hipergeometrico (hipergeom sf):
+For more options use the --help flag: `python -m pebba --help`
 
-https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.hypergeom.html
-https://github.com/scipy/scipy/blob/v0.14.0/scipy/stats/_discrete_distns.py#L347
-https://github.com/scipy/scipy/blob/master/scipy/stats/_discrete_distns.py#L478
+You can also use the test data to run a pebba analysis: 
 
-fdr_bh:
-https://www.statsmodels.org/stable/generated/statsmodels.stats.multitest.multipletests.html
-https://www.statsmodels.org/stable/_modules/statsmodels/stats/multitest.html#multipletests
+`python -m pebba tests/data/GSE49757_Septic_vs_Healthy.txt tests/data/Reactome_2016_15and100Genes.gmt `
