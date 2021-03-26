@@ -9,8 +9,8 @@ from pebba.visualization import create_interactive_plot
 
 
 def pebba(
-    deg_file,
-    gmt_file,
+    deg,
+    gmt,
     gene_col="Gene.symbol",
     logFC_col="logFC",
     pvalue_col="P.Value",
@@ -25,10 +25,10 @@ def pebba(
 
     create_results_directory(results_dir, force)
     if analysis_name is None:
-        analysis_name = set_analysis_name(deg_file)
+        analysis_name = set_analysis_name(deg)
 
-    deg = get_deg(deg_file, gene_col, logFC_col, pvalue_col)
-    dict_of_genes_by_pathway = get_gmt(gmt_file, all_genes_in_deg=deg["Gene.symbol"])
+    deg = get_deg(deg, gene_col, logFC_col, pvalue_col)
+    dict_of_genes_by_pathway = get_gmt(gmt, all_genes_in_deg=deg["Gene.symbol"])
 
     ORA_dataframe_all_directions = get_ORA_dataframes(
         deg, dict_of_genes_by_pathway, min_genes, max_genes

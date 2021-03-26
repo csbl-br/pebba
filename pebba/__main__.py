@@ -1,13 +1,74 @@
+import argparse
 from pebba.main import pebba
 
 
-if __name__ == "__main__":
-    import sys
+parser = argparse.ArgumentParser(description="A tool for ORA meta-analysis")
 
-    deg_file = sys.argv[1]
-    gmt_file = sys.argv[2]
+parser.add_argument("deg", type=str, help="path to deg file")
+parser.add_argument("gmt", type=str, help="path to gmt file")
 
-    pebba(
-        deg_file,
-        gmt_file,
-    )
+parser.add_argument(
+    "--gene",
+    dest="gene_col",
+    type=str,
+    default="Gene.symbol",
+    help="genes column name on the deg file",
+)
+parser.add_argument(
+    "--logfc",
+    dest="logFC_col",
+    type=str,
+    default="logFC",
+    help="logFC column name on the deg file",
+)
+parser.add_argument(
+    "--pval",
+    dest="pvalue_col",
+    type=str,
+    default="P.Value",
+    help="p_value column name on the deg file",
+)
+parser.add_argument(
+    "--min",
+    dest="min_genes",
+    type=int,
+    default=100,
+    help="minimum number of genes to be considered in the analysis",
+)
+parser.add_argument(
+    "--max",
+    dest="max_genes",
+    type=int,
+    default=1500,
+    help="maximum number of genes to be considered in the analysis",
+)
+parser.add_argument(
+    "--p_cut",
+    type=float,
+    default=0.2,
+    help="TODO",
+)
+parser.add_argument(
+    "--name",
+    dest="analysis_name",
+    type=str,
+    help="name under which the analysis will be saved",
+)
+parser.add_argument(
+    "-o",
+    "--output_dir",
+    dest="results_dir",
+    type=str,
+    default="Results",
+    help="name of the directory in which to save the analysis",
+)
+parser.add_argument(
+    "-f",
+    "--force",
+    help="if an analysis with the same name already exists, force it to be overwritten",
+    action="store_true",
+)
+
+
+args = vars(parser.parse_args())
+pebba(**args)
