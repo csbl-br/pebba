@@ -13,13 +13,16 @@ def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_gene
     #    TODO: Give the user the option to input max_workers
     number_of_genes_in_deg = deg["Gene.symbol"].size
     top_genes = get_top_genes(deg, direction, max_genes)
+    pathway_sizes = np.array([len(i) for i in genes_by_pathway.values()])
 
-    with ProcessPoolExecutor(max_workers=2) as executor:
+    # max_workers=None defaults to number of CPUs
+    with ProcessPoolExecutor(max_workers=None) as executor:
         partial_function_for_ORA = partial(
             run_ORA_analysis_for_different_top_genes_ranges,
             top_genes=top_genes,
             genes_by_pathway=genes_by_pathway,
             number_of_genes_in_deg=number_of_genes_in_deg,
+            pathway_sizes=pathway_sizes,
         )
 
         ORA_results = executor.map(
@@ -45,9 +48,11 @@ def _reorder_df_by_mean_expression(df):
 
 
 def run_ORA_analysis_for_different_top_genes_ranges(
-    i, top_genes, genes_by_pathway, number_of_genes_in_deg
+    i, top_genes, genes_by_pathway, number_of_genes_in_deg, pathway_sizes
 ):
     top_i_genes = top_genes.loc[0:i, "Gene.symbol"]
-    ORA_result_i = run_ORA(top_i_genes, number_of_genes_in_deg, genes_by_pathway)
+    ORA_result_i = run_ORA(
+        top_i_genes, number_of_genes_in_deg, genes_by_pathway, pathway_sizes
+    )
     ORA_result_i.columns = [str(i)]
     return ORA_result_i
