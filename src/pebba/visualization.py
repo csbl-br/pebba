@@ -126,7 +126,6 @@ def create_barplot_pathway_counts(df, score_cut):
         marker={
             "color": "rgb(135, 57, 57)",  # red
         },
-        hoverlabel=dict(bgcolor="rgb(71, 70, 130)"),
         hovertemplate="<b>Pathway: </b>%{x} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{y}",
         name="",
@@ -144,7 +143,6 @@ def create_barplot_genescut_count(df, score_cut):
         marker={
             "color": "rgb(135, 57, 57)",  # red
         },
-        hoverlabel=dict(bgcolor="rgb(71, 70, 130)"),
         # TODO pick a better name than gene cut and use it across the code
         hovertemplate="<b>Gene cut: </b>%{y} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{x}",
