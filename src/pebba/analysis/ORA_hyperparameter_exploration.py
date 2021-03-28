@@ -1,4 +1,6 @@
 from concurrent.futures import ProcessPoolExecutor
+
+
 import numpy as np
 import pandas as pd
 from functools import partial
@@ -14,7 +16,7 @@ def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_gene
     number_of_genes_in_deg = deg["Gene.symbol"].size
     top_genes = get_top_genes(deg, direction, max_genes)
 
-    with ProcessPoolExecutor(max_workers=2) as executor:
+    with ProcessPoolExecutor(max_workers=8) as executor:
         partial_function_for_ORA = partial(
             run_ORA_analysis_for_different_top_genes_ranges,
             top_genes=top_genes,
