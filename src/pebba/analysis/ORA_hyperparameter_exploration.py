@@ -10,11 +10,10 @@ def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_gene
     """
     returns a dataframe with pathways as index and number of genes as columns
     """
-    #    TODO: Give the user the option to input max_workers
     number_of_genes_in_deg = deg["Gene.symbol"].size
     top_genes = get_top_genes(deg, direction, max_genes)
     pathway_sizes = np.array([len(i) for i in genes_by_pathway.values()])
-
+    #    TODO(?): Give the user the option to input max_workers
     # max_workers=None defaults to number of CPUs
     with ProcessPoolExecutor(max_workers=None) as executor:
         partial_function_for_ORA = partial(
@@ -26,7 +25,7 @@ def generate_ORA_dataframe(deg, genes_by_pathway, direction, min_genes, max_gene
         )
 
         ORA_results = executor.map(
-            partial_function_for_ORA, range(min_genes, max_genes + 1, 50)
+            partial_function_for_ORA, range(max_genes, min_genes - 1, -50)
         )
 
     ORA_dataframe = pd.concat(ORA_results, axis=1, join="outer")
