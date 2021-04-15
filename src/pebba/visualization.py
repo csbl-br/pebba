@@ -130,7 +130,7 @@ def create_heatmap(df, colorscale):
         },
         hovertemplate="<b>Pathway: </b>%{x} <br>"
         + "<b>Nº of genes considered: </b>%{y} <br>"
-        + "<b>Enrichment Score: </b>%{z}",
+        + "<b>Enrichment Confidence Score: </b>%{z}",
         name="",
     )
     return trace
