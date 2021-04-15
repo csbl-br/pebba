@@ -129,7 +129,7 @@ def create_heatmap(df, colorscale):
             "yanchor": "top",
         },
         hovertemplate="<b>Pathway: </b>%{x} <br>"
-        + "<b>Gene cut: </b>%{y} <br>"
+        + "<b>Nº of genes considered: </b>%{y} <br>"
         + "<b>Enrichment Score: </b>%{z}",
         name="",
     )
@@ -159,8 +159,7 @@ def create_barplot_genescut_count(df, score_cut, color):
         xaxis="x3",
         yaxis="y3",
         marker={"color": color},
-        # TODO pick a better name than gene cut and use it across the code
-        hovertemplate="<b>Gene cut: </b>%{y} <br>"
+        hovertemplate="<b>Nº of genes considered: </b>%{y} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{x}",
         name="",
     )
