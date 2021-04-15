@@ -14,11 +14,14 @@ def create_interactive_plot(
     p_cut,
     output_type="file",  # or div
 ):
-    heatmap = create_heatmap(df)
+
+    heatmap_color, bar_color = pick_colors(direction)
+
+    heatmap = create_heatmap(df, heatmap_color)
 
     path_cut_p = np.log10(p_cut) * (-1)
-    barplot1 = create_barplot_pathway_counts(df, path_cut_p)
-    barplot2 = create_barplot_genescut_count(df, path_cut_p)
+    barplot1 = create_barplot_pathway_counts(df, path_cut_p, bar_color)
+    barplot2 = create_barplot_genescut_count(df, path_cut_p, bar_color)
 
     data = [heatmap, barplot1, barplot2]
 
@@ -34,6 +37,22 @@ def create_interactive_plot(
             "modeBarButtonsToRemove": ["pan2d", "toggleSpikelines"],
         },
     )
+
+
+def pick_colors(direction):
+    colorscales = {
+        "up": ["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],  # red
+        "down": ["rgb(255,255,255)", "rgb(47, 187, 237)", "rgb(41, 128, 185)"],  # blue
+        "any": ["rgb(255,255,255)", "rgb(91, 91, 102)", "rgb(33, 33, 36)"],  # grey
+        # "any": ["rgb(255,255,255)", "rgb(158, 39, 227)", "rgb(103, 17, 173)"],  # purple
+    }
+    colors = {
+        "up": "rgb(135, 57, 57)",  # red
+        "down": "rgb(126, 139, 158)",  # blue
+        "any": "rgb(91, 91, 102)",  # grey
+        # "any": "rgb(109, 10, 166)",  # purple
+    }
+    return colorscales[direction], colors[direction]
 
 
 def generate_layout():
@@ -93,7 +112,7 @@ def generate_layout():
     return layout
 
 
-def create_heatmap(df):
+def create_heatmap(df, colorscale):
     NGs = df.columns.tolist()
     pathways = df.index.tolist()
     values = [df[column].tolist() for column in df]
@@ -102,7 +121,7 @@ def create_heatmap(df):
         z=values,
         y=NGs,
         x=pathways,
-        colorscale=["rgb(255,255,255)", "rgb(229, 45, 39)", "rgb(179, 18, 23)"],
+        colorscale=colorscale,
         colorbar={
             "len": 0.7,
             "y": 1,
@@ -116,16 +135,14 @@ def create_heatmap(df):
     return trace
 
 
-def create_barplot_pathway_counts(df, score_cut):
+def create_barplot_pathway_counts(df, score_cut, color):
     barplot = go.Bar(
         x=df.index.tolist(),
         y=calculate_how_many_above_cut(df, path_cut_p=score_cut, axis_sum=1).tolist(),
         orientation="v",
         xaxis="x2",
         yaxis="y2",
-        marker={
-            "color": "rgb(135, 57, 57)",  # red
-        },
+        marker={"color": color},
         hovertemplate="<b>Pathway: </b>%{x} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{y}",
         name="",
@@ -133,16 +150,14 @@ def create_barplot_pathway_counts(df, score_cut):
     return barplot
 
 
-def create_barplot_genescut_count(df, score_cut):
+def create_barplot_genescut_count(df, score_cut, color):
     barplot = go.Bar(
         x=calculate_how_many_above_cut(df, path_cut_p=score_cut, axis_sum=0).tolist(),
         y=df.columns.tolist(),
         orientation="h",
         xaxis="x3",
         yaxis="y3",
-        marker={
-            "color": "rgb(135, 57, 57)",  # red
-        },
+        marker={"color": color},
         # TODO pick a better name than gene cut and use it across the code
         hovertemplate="<b>Gene cut: </b>%{y} <br>"
         + "<b>Nº of times enrichment was detected: </b>%{x}",
