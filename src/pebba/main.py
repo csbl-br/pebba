@@ -18,6 +18,8 @@ def pebba(
     p_cut=0.2,
     analysis_name=None,
     results_dir="Results",
+    make_plots=True,
+    return_dataframes=True,
     force=False,
 ):
     validate_range_of_inputs(min_genes, max_genes, p_cut)
@@ -29,19 +31,21 @@ def pebba(
     deg = get_deg(deg, gene_col, logFC_col, pvalue_col)
     dict_of_genes_by_pathway = get_gmt(gmt, all_genes_in_deg=deg["Gene.symbol"])
 
-    ORA_dataframe_all_directions = get_ORA_dataframes(
+    ORA_all_dirs = get_ORA_dataframes(
         deg, dict_of_genes_by_pathway, min_genes, max_genes
     )
-
-    create_interactive_plots(
-        ORA_dataframe_all_directions,
-        dict_of_genes_by_pathway,
-        analysis_name,
-        results_dir,
-        p_cut,
-    )
-
-    return
+    if make_plots == True:
+        create_interactive_plots(
+            ORA_all_dirs,
+            dict_of_genes_by_pathway,
+            analysis_name,
+            results_dir,
+            p_cut,
+        )
+    if return_dataframes == True:
+        return ORA_all_dirs
+    else:
+        return
 
 
 def validate_range_of_inputs(min_genes, max_genes, p_cut):
@@ -51,8 +55,8 @@ def validate_range_of_inputs(min_genes, max_genes, p_cut):
     if max_genes < 100 or max_genes > 3000:
         raise ValueError("Variable max_genes must be between 100 and 3000 genes")
 
-    if p_cut < 0.00001 or p_cut > 1:
-        raise ValueError("Variable p_cut must be between 0.00001 and 1")
+    if p_cut < 0.0000001 or p_cut > 1:
+        raise ValueError("Variable p_cut must be between 0.0000001 and 1")
 
 
 def create_results_directory(results_dir, force):
@@ -90,18 +94,18 @@ def set_analysis_name(file_in):
 
 def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes):
     directions = ["up", "down", "any"]
-    ORA_dataframe_all_directions = {
+    ORA_all_dirs = {
         direction: generate_ORA_dataframe(
             deg, dict_genes_by_pathway, direction, min_genes, max_genes
         )
         for direction in directions
     }
 
-    return ORA_dataframe_all_directions
+    return ORA_all_dirs
 
 
 def create_interactive_plots(
-    ORA_dataframe_all_directions,
+    ORA_all_dirs,
     dict_genes_by_pathway,
     analysis_name,
     results_dir,
@@ -110,7 +114,7 @@ def create_interactive_plots(
     directions = ["up", "down", "any"]
     for direction in directions:
         create_interactive_plot(
-            ORA_dataframe_all_directions[direction],
+            ORA_all_dirs[direction],
             dict_genes_by_pathway,
             direction,
             analysis_name,

@@ -63,6 +63,18 @@ parser.add_argument(
     help="name of the directory in which to save the analysis",
 )
 parser.add_argument(
+    "--no_plot",
+    help="Do not plot the heatmaps",
+    dest="make_plots",
+    action="store_false",
+)
+parser.add_argument(
+    "--no_df",
+    help="Do not return the dataframes",
+    dest="return_dataframes",
+    action="store_false",
+)
+parser.add_argument(
     "-f",
     "--force",
     help="if an analysis with the same name already exists, force it to be overwritten",
