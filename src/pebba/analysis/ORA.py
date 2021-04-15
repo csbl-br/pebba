@@ -31,7 +31,6 @@ def run_hypergeom_tests(
     number_of_degs_by_pathway,
     pathway_sizes,
 ):
-    # TODO: pq esse menos 1? pypathway usa isso e eu n sei pq
     result = stats.hypergeom.sf(
         number_of_degs_by_pathway - 1,
         number_of_genes_in_deg,

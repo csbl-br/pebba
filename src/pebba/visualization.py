@@ -12,19 +12,20 @@ def create_interactive_plot(
     analysis_name,
     results_dir,
     p_cut,
+    drop_cut,
     output_type="file",  # or div
 ):
 
+    # drop every pathway that is practically not enriched at all
+    df = df[df.apply(lambda row: not all(row < drop_cut), axis=1)]
+
     heatmap_color, bar_color = pick_colors(direction)
-
     heatmap = create_heatmap(df, heatmap_color)
-
     path_cut_p = np.log10(p_cut) * (-1)
     barplot1 = create_barplot_pathway_counts(df, path_cut_p, bar_color)
     barplot2 = create_barplot_genescut_count(df, path_cut_p, bar_color)
 
     data = [heatmap, barplot1, barplot2]
-
     layout = generate_layout()
     figure = go.Figure(data=data, layout=layout)
 

@@ -16,6 +16,7 @@ def pebba(
     min_genes=100,
     max_genes=1500,
     p_cut=0.2,
+    drop_cut=0.05,
     analysis_name=None,
     results_dir="Results",
     make_plots=True,
@@ -41,6 +42,7 @@ def pebba(
             analysis_name,
             results_dir,
             p_cut,
+            drop_cut,
         )
     if return_dataframes == True:
         return ORA_all_dirs
@@ -105,11 +107,7 @@ def get_ORA_dataframes(deg, dict_genes_by_pathway, min_genes, max_genes):
 
 
 def create_interactive_plots(
-    ORA_all_dirs,
-    dict_genes_by_pathway,
-    analysis_name,
-    results_dir,
-    p_cut,
+    ORA_all_dirs, dict_genes_by_pathway, analysis_name, results_dir, p_cut, drop_cut
 ):
     directions = ["up", "down", "any"]
     for direction in directions:
@@ -120,4 +118,5 @@ def create_interactive_plots(
             analysis_name,
             results_dir,
             p_cut,
+            drop_cut,
         )
