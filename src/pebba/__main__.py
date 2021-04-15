@@ -49,6 +49,12 @@ parser.add_argument(
     help="TODO",
 )
 parser.add_argument(
+    "--drop_cut",
+    type=float,
+    default=0.05,
+    help="minimum value of enrichment for a pathway to be included on the heatmap",
+)
+parser.add_argument(
     "--name",
     dest="analysis_name",
     type=str,
@@ -61,6 +67,18 @@ parser.add_argument(
     type=str,
     default="Results",
     help="name of the directory in which to save the analysis",
+)
+parser.add_argument(
+    "--no_plot",
+    help="do not plot the heatmaps",
+    dest="make_plots",
+    action="store_false",
+)
+parser.add_argument(
+    "--no_df",
+    help="do not return the dataframes",
+    dest="return_dataframes",
+    action="store_false",
 )
 parser.add_argument(
     "-f",
