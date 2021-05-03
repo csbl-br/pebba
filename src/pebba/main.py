@@ -1,6 +1,8 @@
 import os
 import sys
 
+import pandas as pd
+
 from pebba.utils.gmt_utils import get_gmt
 from pebba.utils.deg_utils import get_deg
 from pebba.analysis.ORA_hyperparameter_exploration import generate_ORA_dataframe
@@ -20,7 +22,7 @@ def pebba(
     analysis_name=None,
     results_dir="Results",
     make_plots=True,
-    return_dataframes=True,
+    save_csv=True,
     force=False,
 ):
     validate_range_of_inputs(min_genes, max_genes, p_cut)
@@ -44,10 +46,9 @@ def pebba(
             p_cut,
             drop_cut,
         )
-    if return_dataframes == True:
-        return ORA_all_dirs
-    else:
-        return
+    if save_csv == True:
+        save_to_csv(ORA_all_dirs, results_dir, analysis_name)
+    return ORA_all_dirs
 
 
 def validate_range_of_inputs(min_genes, max_genes, p_cut):
@@ -120,3 +121,9 @@ def create_interactive_plots(
             p_cut,
             drop_cut,
         )
+
+
+def save_to_csv(ORA_all_dirs, results_dir, analysis_name):
+    directions = ["up", "down", "any"]
+    for direction in directions:
+        ORA_all_dirs[direction].to_csv(f"{results_dir}/{analysis_name}_{direction}.csv")

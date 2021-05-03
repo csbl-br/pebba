@@ -75,9 +75,9 @@ parser.add_argument(
     action="store_false",
 )
 parser.add_argument(
-    "--no_df",
+    "--no_csv",
     help="do not return the dataframes",
-    dest="return_dataframes",
+    dest="save_csv",
     action="store_false",
 )
 parser.add_argument(
