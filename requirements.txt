@@ -1,5 +1,0 @@
-scipy
-plotly>=4.14.3
-numpy
-statsmodels
-pandas
