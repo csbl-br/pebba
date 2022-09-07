@@ -46,7 +46,7 @@ parser.add_argument(
     "--p_cut",
     type=float,
     default=0.2,
-    help="TODO",
+    help="threshold enrichment value for the barplots",
 )
 parser.add_argument(
     "--drop_cut",
