@@ -68,11 +68,6 @@ def generate_layout():
     )
 
     layout = go.Layout(
-        # paper_bgcolor="rgba(255,255,255,0)",  # background color for the paper of the plot
-        # plot_bgcolor="rgb(255,255,255)",  # background color for the plot
-        # hoverlabel=dict(
-        #     # bgcolor="black", #too black for my taste #TODO find a good color profile
-        # ),
         template="plotly_white",
         showlegend=False,
         xaxis={
