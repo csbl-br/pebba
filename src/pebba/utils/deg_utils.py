@@ -21,8 +21,8 @@ def read_deg(file_in):
 def preprocess_deg(deg, gene_col, logFC_col, pvalue_col):
     deg = deg.dropna()
     deg = deg.astype({gene_col: "str"})
-
+    deg = deg[[gene_col, logFC_col, pvalue_col]]
     deg = deg.rename(
         columns={gene_col: "Gene.symbol", logFC_col: "logFC", pvalue_col: "P.Value"}
     )
-    return deg  # deg[["Gene.symbol", "logFC" , "P.Value"]]  # todo return only the used columns
+    return deg
