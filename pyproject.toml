@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pebba"
-version = "0.1.1"
+version = "0.1.2"
 description = "A tool for ORA meta-analysis"
 authors = ["Alan Barzilay"]
 license = "GPL-3.0-or-later"
