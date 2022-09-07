@@ -11,6 +11,6 @@ def test_preprocess_deg():
         fake_deg, gene_col="c", logFC_col="a", pvalue_col="d"
     )
     processed_names = list(preprocessed_fake_deg.columns)
-    intended_names = ["logFC", "b", "Gene.symbol", "P.Value"]
+    intended_names = ["Gene.symbol", "logFC", "P.Value"]
     for processed_name, intended_name in zip(processed_names, intended_names):
         assert processed_name == intended_name
